@@ -15,6 +15,7 @@
 		A3C6029023305BAF00124AA9 /* JPMCPlanetsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C6028F23305BAF00124AA9 /* JPMCPlanetsTests.swift */; };
 		A3C6029B23305BAF00124AA9 /* JPMCPlanetsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C6029A23305BAF00124AA9 /* JPMCPlanetsUITests.swift */; };
 		A3C602A9233391A000124AA9 /* PlanetsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C602A8233391A000124AA9 /* PlanetsTableViewController.swift */; };
+		A3C602AB233434F100124AA9 /* PlanetInfoTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C602AA233434F100124AA9 /* PlanetInfoTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		A3C6029A23305BAF00124AA9 /* JPMCPlanetsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JPMCPlanetsUITests.swift; sourceTree = "<group>"; };
 		A3C6029C23305BAF00124AA9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A3C602A8233391A000124AA9 /* PlanetsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetsTableViewController.swift; sourceTree = "<group>"; };
+		A3C602AA233434F100124AA9 /* PlanetInfoTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanetInfoTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +101,7 @@
 		A3C6027923305BAE00124AA9 /* JPMCPlanets */ = {
 			isa = PBXGroup;
 			children = (
+				A3C602AA233434F100124AA9 /* PlanetInfoTableViewController.swift */,
 				A3C6027A23305BAE00124AA9 /* AppDelegate.swift */,
 				A3C6027C23305BAE00124AA9 /* ViewController.swift */,
 				A3C6027E23305BAE00124AA9 /* Main.storyboard */,
@@ -260,6 +263,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A3C6027D23305BAE00124AA9 /* ViewController.swift in Sources */,
+				A3C602AB233434F100124AA9 /* PlanetInfoTableViewController.swift in Sources */,
 				A3C602A9233391A000124AA9 /* PlanetsTableViewController.swift in Sources */,
 				A3C6027B23305BAE00124AA9 /* AppDelegate.swift in Sources */,
 			);
