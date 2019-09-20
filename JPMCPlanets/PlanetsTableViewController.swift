@@ -15,6 +15,68 @@ class PlanetsTableViewController: UITableViewController {
    var _planetInfo:[String:[String:Any]] = [:]
    var _selected:String = ""
    
+   //store last saved planet name and dictionary of planet info
+   var _lastPlanets:[String] = [String]()
+   var _lastPlanetInfo:[String:[String:Any]] = [:]
+   
+   //which section was the selectin from
+   var _selectedSection:Int = 0
+   
+   //get the documents dirctory
+   //used to construct name of file to save planets json to
+   func getDocumentsDirectory() -> URL {
+      let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+      return paths[0]
+   }
+   
+   //save the json returned from website
+   func writePlanetsToFile(data:Data)
+   {
+      do
+      {
+         let filename = self.getDocumentsDirectory().appendingPathComponent("planets.json")
+         try data.write(to: filename)
+      }
+      catch
+      {
+         print("write failed")
+      }
+
+   }
+   
+   //read the json saved in previous session
+   //and create last saved planets
+   //will fail the first time as file will not exist
+   func readPlanetsFromFile()
+   {
+      do
+      {
+         let filename = self.getDocumentsDirectory().appendingPathComponent("planets.json")
+
+         let ndata:Data = try Data(contentsOf: filename)
+         let njson = try JSONSerialization.jsonObject(with: ndata, options: []) as? [String: Any]
+         let nresults = njson!["results"] as? [Any]
+         
+         for item in nresults!
+         {
+            //print("ANITEM: \(item)")
+            if let itemDictionary = item as? [String: Any]
+            {
+               if let name = itemDictionary["name"]
+               {
+                  print(name)
+                  
+                  self._lastPlanets.append(name as! String)
+                  self._lastPlanetInfo[name as! String] = itemDictionary
+               }
+            }
+         }
+      }
+      catch
+      {
+         print("read failed")
+      }
+   }
    override func viewDidLoad() {
       super.viewDidLoad()
       
@@ -47,11 +109,14 @@ class PlanetsTableViewController: UITableViewController {
                   DispatchQueue.main.async { // Correct
                      self.tableView.reloadData()
                      
+                     //DEBUG
                      print(self._planetInfo["Bespin"]!["gravity"]!)
                      print(self._planetInfo["Bespin"]!["terrain"]!)
                   }
                   
                   //TODO: write planets to file
+                  self.readPlanetsFromFile()
+                  self.writePlanetsToFile(data: data!)
                }
             }
          }
@@ -75,15 +140,30 @@ class PlanetsTableViewController: UITableViewController {
    }
    
    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-      // #warning Incomplete implementation, return the number of rows
-      return _planets.count
+      switch section
+      {
+      case 0:
+         return _planets.count
+      case 1:
+         return _lastPlanets.count
+      default:
+         return 0
+      }
    }
    
    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
       let cell = tableView.dequeueReusableCell(withIdentifier: "planetCell", for: indexPath)
       
       // Configure the cell...
-      cell.textLabel?.text = _planets[indexPath.row]
+      switch indexPath.section
+      {
+      case 0:
+         cell.textLabel?.text = _planets[indexPath.row]
+      case 1:
+         cell.textLabel?.text = _lastPlanets[indexPath.row]
+      default:
+         cell.textLabel?.text = ""
+      }
       
       return cell
    }
@@ -104,7 +184,18 @@ class PlanetsTableViewController: UITableViewController {
    }
    
    override func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-      _selected = _planets[indexPath.row]
+      switch indexPath.section
+      {
+      case 0:
+         _selected = _planets[indexPath.row]
+         _selectedSection = 0
+      case 1:
+         _selected = _lastPlanets[indexPath.row]
+         _selectedSection = 1
+      default:
+         _selected = ""
+      }
+      
       return indexPath
    }
    
@@ -120,7 +211,16 @@ class PlanetsTableViewController: UITableViewController {
          print("got planet info segue")
          if var destination = segue.destination as? usesPlanetInfo
          {
-            destination.planetInfo = _planetInfo[_selected]!
+            switch _selectedSection
+            {
+            case 0:
+               destination.planetInfo = _planetInfo[_selected]!
+            case 1:
+               destination.planetInfo = _lastPlanetInfo[_selected]!
+            default:
+               destination.planetInfo = _planetInfo[_selected]!
+
+            }
          }
       }
    }
