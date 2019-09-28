@@ -1,6 +1,17 @@
 # JPMCPlanets
-Documentation/Workflow
+Documentation/Workflow:
 
+Summary:
+Perform HTTP request - https://swapi.co/api/planets/?page=3 and display planets response in a list
+Persist request to a file, read, and display as "last" request
+Upon selection of planet from list show additional information
+
+Discussion:
+Solution uses a grouped table view controller with a "current" and "last" section
+Embedded in a navigation controller
+Selections perfrom a segue to another table view controller with the selected planet info
+
+Details:
 Query website on startup ( viewDidLoad ), PlanetsTableViewController
 Capture and parse JSON into a list of planet names and a dictioary of planet name to dictioary of planet info
 Read the last queried planets list from file, this is the JSON that was returned from the query
@@ -11,7 +22,6 @@ In prepare for segue the selected planet dictionary is set on the destination vi
 
 
 Suggestions for improvement:
-
 add UI and network unit tests
 localization
 add images/video
@@ -21,3 +31,4 @@ more error checking
 convert to swiftui
 perform file read in another thread
 indicate "no last"
+add navigation item button fpr "next page"
