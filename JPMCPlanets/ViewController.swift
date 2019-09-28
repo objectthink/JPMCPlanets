@@ -17,6 +17,7 @@ class ViewController: UIViewController
       super.viewDidLoad()
       // Do any additional setup after loading the view.
       
+      //INITIAL WEB REQUEST TEST
       let planetsUrl = URL(string:"https://swapi.co/api/planets/")!
       let task = URLSession.shared.dataTask(with: planetsUrl)
       {(data, response, error) in

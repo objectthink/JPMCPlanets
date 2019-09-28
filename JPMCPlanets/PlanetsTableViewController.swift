@@ -35,10 +35,14 @@ class PlanetsTableViewController: UITableViewController {
       do
       {
          let filename = self.getDocumentsDirectory().appendingPathComponent("planets.json")
+         
+         print(filename)
+         
          try data.write(to: filename)
       }
       catch
       {
+         //TODO: alert on failure
          print("write failed")
       }
 
@@ -74,12 +78,17 @@ class PlanetsTableViewController: UITableViewController {
       }
       catch
       {
+         //TODO: alert on failure
          print("read failed")
       }
    }
    override func viewDidLoad() {
       super.viewDidLoad()
       
+      //DEMONSTRATE HOW TO QUERY FOR PAGE - pass page argument
+      //let planetsUrl = URL(string:"https://swapi.co/api/planets/?page=3")!
+
+      //TODO: move this request, read, and write logic to a function to allow for "next page" button
       let planetsUrl = URL(string:"https://swapi.co/api/planets/")!
       let task = URLSession.shared.dataTask(with: planetsUrl)
       {(data, response, error) in
@@ -105,18 +114,20 @@ class PlanetsTableViewController: UITableViewController {
                         }
                      }
                   }
-                  //marshal update onto theui thread
+                  
+                  //marshal update onto the ui thread
                   DispatchQueue.main.async { // Correct
+                     //TODO: write planets to file
+                     self.readPlanetsFromFile()
+                     self.writePlanetsToFile(data: data!)
+
                      self.tableView.reloadData()
                      
                      //DEBUG
-                     print(self._planetInfo["Bespin"]!["gravity"]!)
-                     print(self._planetInfo["Bespin"]!["terrain"]!)
+                     //print(self._planetInfo["Bespin"]!["gravity"]!)
+                     //print(self._planetInfo["Bespin"]!["terrain"]!)
                   }
                   
-                  //TODO: write planets to file
-                  self.readPlanetsFromFile()
-                  self.writePlanetsToFile(data: data!)
                }
             }
          }
