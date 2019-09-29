@@ -14,6 +14,7 @@ class PlanetsTableViewController: UITableViewController {
    var _planets:[String] = [String]()
    var _planetInfo:[String:[String:Any]] = [:]
    var _selected:String = ""
+   var _page = 1
    
    //store last saved planet name and dictionary of planet info
    var _lastPlanets:[String] = [String]()
@@ -21,6 +22,44 @@ class PlanetsTableViewController: UITableViewController {
    
    //which section was the selectin from
    var _selectedSection:Int = 0
+   
+   //next/previous buttons
+   @IBOutlet weak var _nextButton: UIBarButtonItem!
+   @IBOutlet weak var _previousButton: UIBarButtonItem!
+   
+   
+   @IBAction func nextPage(_ sender: UIBarButtonItem) {
+      _page = _page + 1
+      
+      //clear current planets
+      _planets.removeAll()
+      _planetInfo.removeAll()
+      
+      //clear last planets
+      _lastPlanets.removeAll()
+      _lastPlanetInfo.removeAll()
+      
+      fetchPage()
+   }
+   
+   @IBAction func previousPage(_ sender: UIBarButtonItem) {
+      _page = _page - 1
+      
+      if _page < 0
+      {
+         _page = 0
+      }
+      
+      //clear current planets
+      _planets.removeAll()
+      _planetInfo.removeAll()
+      
+      //clear last planets
+      _lastPlanets.removeAll()
+      _lastPlanetInfo.removeAll()
+      
+      fetchPage()
+   }
    
    //get the documents dirctory
    //used to construct name of file to save planets json to
@@ -82,14 +121,32 @@ class PlanetsTableViewController: UITableViewController {
          print("read failed")
       }
    }
-   override func viewDidLoad() {
-      super.viewDidLoad()
+   
+   func alert(message:String)
+   {
+      //marshal update onto the ui thread
+      DispatchQueue.main.async {
+         print("\(message)")
+         
+         let alertController =
+            UIAlertController(title: "Planets Fetch Error", message:"\(message)", preferredStyle: .alert)
+         
+         alertController.addAction(UIAlertAction(title: "OK", style: .default))
+
+         self.present(alertController, animated: true, completion: nil)
+      }
+   }
+   
+   func fetchPage()
+   {
+      _nextButton.isEnabled = false;
+      _previousButton.isEnabled = false;
       
       //DEMONSTRATE HOW TO QUERY FOR PAGE - pass page argument
       //let planetsUrl = URL(string:"https://swapi.co/api/planets/?page=3")!
 
       //TODO: move this request, read, and write logic to a function to allow for "next page" button
-      let planetsUrl = URL(string:"https://swapi.co/api/planets/")!
+      let planetsUrl = URL(string:"https://swapi.co/api/planets/?page=\(_page)")!
       let task = URLSession.shared.dataTask(with: planetsUrl)
       {(data, response, error) in
          do
@@ -115,32 +172,60 @@ class PlanetsTableViewController: UITableViewController {
                      }
                   }
                   
-                  //marshal update onto the ui thread
-                  DispatchQueue.main.async { // Correct
-                     //TODO: write planets to file
-                     self.readPlanetsFromFile()
-                     self.writePlanetsToFile(data: data!)
+                  //update if there were results
+                  if results.count > 0
+                  {
+                     //marshal update onto the ui thread
+                     DispatchQueue.main.async { // Correct
+                        //TODO: write planets to file
+                        self.readPlanetsFromFile()
+                        self.writePlanetsToFile(data: data!)
 
-                     self.tableView.reloadData()
-                     
-                     //DEBUG
-                     //print(self._planetInfo["Bespin"]!["gravity"]!)
-                     //print(self._planetInfo["Bespin"]!["terrain"]!)
+                        self.tableView.reloadData()
+                        
+                        self._nextButton.isEnabled = true
+                        self._previousButton.isEnabled = true
+                        
+                        //DEBUG
+                        //print(self._planetInfo["Bespin"]!["gravity"]!)
+                        //print(self._planetInfo["Bespin"]!["terrain"]!)
+                     }
                   }
+                  else
+                  {
+                     self._nextButton.isEnabled = true
+                     self._previousButton.isEnabled = true
+                  }
+               }
+               else
+               {
+                  let detail = json["detail"] as? String
                   
+                  self.alert(message:detail!)
+                  
+                  self._nextButton.isEnabled = true
+                  self._previousButton.isEnabled = true
                }
             }
+
          }
          catch let error as NSError
          {
             //TODO: may try to read planets from file if web is not available
+            self.alert(message:error.localizedDescription)
             
-            print("\(error)")
-            
+            self._nextButton.isEnabled = true
+            self._previousButton.isEnabled = true
          }
       }
       
       task.resume()
+   }
+   
+   override func viewDidLoad() {
+      super.viewDidLoad()
+      
+      fetchPage()
    }
    
    // MARK: - Table view data source
