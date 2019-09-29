@@ -183,6 +183,9 @@ class PlanetsTableViewController: UITableViewController {
 
                         self.tableView.reloadData()
                         
+                        //TODO:move button disposition updates to a function
+                        //enable/disable page navigation while planets are being fetched
+                        //so as to not attempt table view updates until after planets are fetched
                         self._nextButton.isEnabled = true
                         self._previousButton.isEnabled = true
                         
@@ -193,6 +196,7 @@ class PlanetsTableViewController: UITableViewController {
                   }
                   else
                   {
+                     //enable/disable page navigation while planets are being fetched
                      self._nextButton.isEnabled = true
                      self._previousButton.isEnabled = true
                   }
@@ -203,6 +207,7 @@ class PlanetsTableViewController: UITableViewController {
                   
                   self.alert(message:detail!)
                   
+                  //enable/disable page navigation while planets are being fetched
                   self._nextButton.isEnabled = true
                   self._previousButton.isEnabled = true
                }
@@ -214,6 +219,7 @@ class PlanetsTableViewController: UITableViewController {
             //TODO: may try to read planets from file if web is not available
             self.alert(message:error.localizedDescription)
             
+            //enable/disable page navigation while planets are being fetched
             self._nextButton.isEnabled = true
             self._previousButton.isEnabled = true
          }
