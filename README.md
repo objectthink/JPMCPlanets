@@ -1,4 +1,4 @@
-# JPMCPlanets
+# planets
 Documentation/Workflow:
 
 Summary:
@@ -20,15 +20,3 @@ Main table view controller has 2 sections, one for the current planet list and o
 Selections from table view controller ( which is embedde in a navigation contoller ) navigate to PlanetInfoTableViewController
 In prepare for segue the selected planet dictionary is set on the destination view controller which implements useswPlanetInfo protocol
 
-
-Suggestions for improvement:
-add UI and network unit tests
-localization
-add images/video
-add option to fetch other pages
-ability to query for more pages
-more error checking
-convert to swiftui
-perform file read in another thread
-indicate "no last"
-add navigation item button fpr "next page"
