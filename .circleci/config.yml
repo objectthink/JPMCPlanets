@@ -9,13 +9,17 @@ hello-cruel-world-step: &helloStep
 
 say-step: &say
   run:
-    name: "hello cruel world"
+    name: "say something"
     command: "echo say something"
 
 #-step Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
 jobs:
   say-hello:
+    parameters:
+      something:
+        type: string
+
     # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
     # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
     docker:
@@ -30,6 +34,7 @@ jobs:
 # Invoke jobs via workflows
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
-  say-hello-workflow:
+  my-workflows:
     jobs:
-      - say-hello
+      - say-hello:
+          something: "hello cruel cruel world"
