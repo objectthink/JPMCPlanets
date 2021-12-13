@@ -7,10 +7,10 @@ hello-cruel-world-step: &helloStep
     name: "hello cruel world"
     command: "echo hello cruel world"
 
-say-step: &say
+say-step: &say      
   run:
     name: "say something"
-    command: "echo say something"
+    command: echo << parameters.something >>
 
 #-step Define a job to be invoked later in a workflow.
 # See: https://circleci.com/docs/2.0/configuration-reference/#jobs
