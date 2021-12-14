@@ -46,7 +46,8 @@ workflows:
           filters:
             branches:
               only: 
-                - circleci-project-setup
+                #- circleci-project-setup
+                - does-not-exist
     jobs:
       - say-hello:
           something: "OMG HELLO CRUEL CRUEL WORLD"
