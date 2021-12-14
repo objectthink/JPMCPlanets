@@ -38,3 +38,14 @@ workflows:
     jobs:
       - say-hello:
           something: "hello cruel cruel world"
+  
+  my-scheduled-workflow:
+    triggers:
+      - schedule:
+          cron: "0.*.*.*.*"
+          filters:
+            branches:
+              only: circle-project-setup
+    jobs:
+      - say-hello:
+          something: OMG HELLO CRUEL CRUEL WORLD!
