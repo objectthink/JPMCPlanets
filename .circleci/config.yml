@@ -42,10 +42,11 @@ workflows:
   my-scheduled-workflow:
     triggers:
       - schedule:
-          cron: "0.*.*.*.*"
+          cron: "* * * * *"
           filters:
             branches:
-              only: circle-project-setup
+              only: 
+                - circleci-project-setup
     jobs:
       - say-hello:
-          something: OMG HELLO CRUEL CRUEL WORLD!
+          something: "OMG HELLO CRUEL CRUEL WORLD"
